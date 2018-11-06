@@ -10,7 +10,7 @@ router.get('/', async function(req, res) {
     res.send(await cars.find({}).toArray());
 });
 
-// SHOW
+// GET BY ID
 router.get('/:carId', async function(req, res) {
   
     res.json({
@@ -47,7 +47,25 @@ router.post('/', async function(req, res) {
 });
 
 // DELETE
-
+router.delete('/:carId', async function (req, res) {
+    const cars = await loadCarsConnection();
+ 
+    await cars.remove({
+        _id: mongodb.ObjectID(req.params.carId)
+    }, function(err, result){
+        if(err){
+            res.status(200).json({
+                status: "error",
+                error: err
+            });
+        }else{
+            res.status(201).json({
+                status: "ok",
+                message: `Car ${req.params.carId} was deleted!`
+            });
+        }
+    });
+ });
 
 // UPDATE
 
