@@ -12,10 +12,8 @@ router.get('/', async function(req, res) {
 
 // GET BY ID
 router.get('/:carId', async function(req, res) {
-  
-    res.json({
-        message: `return car with ${req.params.carId}`
-    });
+    const cars = await loadCarsConnection();     
+    res.send(await cars.find({_id: mongodb.ObjectID(req.params.carId)}).toArray());
 });
 
 // CREATE
