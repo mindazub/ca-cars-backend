@@ -67,35 +67,31 @@ router.delete('/:carId', async function (req, res) {
  });
 
 // UPDATE
-router.patch('/:carId', async function(req, res) {
-    const cars = await loadCarsConnection();    
-    let updatedData = {
+router.patch('/:id', async function (req, res) {
+    const cars = await loadCarsConnection();
+    let newData = {
         brand: req.body.brand,
         model: req.body.model,
         price: req.body.price,
-        engine: req.body.engine,
-        updatedAt: new Date() // updated laikas
-    }
-
-    await cars.updateOne({
-        _id: mongodb.ObjectID(req.params.carId)
-    },updatedData, function(err, result){
-        if(err){
-            console.log(err);
+        engine: req.body.engine
+    };
+    await cars.updateOne({ _id: mongodb.ObjectId(req.params.id) }, { $set: newData}, function (err) {
+        if (err) {
             res.status(200).json({
                 status: "error",
                 error: err
-            });
-        }else{            
-            console.log(result);
+ 
+            })
+        } else {
             res.status(201).json({
-                status: "OK",
-                message: `Car ${req.body.brand} ${req.body.model} was updated`
-            });
-        };
+                status: "ok",
+                message: `Car ${req.body.brand} updated successfully!`
+            })
+        }
     });
-});
-
+ });
+ 
+ 
 // connect to db
 
 async function loadCarsConnection() {
